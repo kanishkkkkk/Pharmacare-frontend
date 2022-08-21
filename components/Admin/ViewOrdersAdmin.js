@@ -5,8 +5,12 @@ import { useState } from "react";
 import { Container } from "reactstrap";
 import baseUrl from "../../api's/base_url";
 import OrderAdmin from "./OrderAdmin";
+import ViewAllOrders from "./ViewAllOrders";
+import ViewNewOrder from "./ViewNewOrder";
+import ViewPickedUpOrder from "./ViewPickedUpOrder";
+import ViewVerifiedOrder from "./ViewVerifiedOrder";
 
-function ViewOrdersAdmin() {
+function ViewOrdersAdmin({ flag }) {
     const [orders, setOrders] = useState({});
 
     const getOrdersFromApi = () => {
@@ -27,21 +31,42 @@ function ViewOrdersAdmin() {
         getOrdersFromApi();
     }, []);
 
-    return (
-        <div>
-            <h1>This is View ordes pages Admin</h1>
-            <Container>
-                {/* {console.log("view orders")}
-                {console.log(orders)} */}
-                {orders.length > 0
-                    ? orders.map((o) => {
-                          console.log("view order in map ");
-                          console.log(o);
-                          return <OrderAdmin key={o.orderId} order={o} />;
-                      })
-                    : "No order"}
-            </Container>
-        </div>
-    );
+    const updateViewOrder = () => {
+        getOrdersFromApi();
+    };
+    const view = () => {
+        switch (flag) {
+            case "verified":
+                return (
+                    <ViewVerifiedOrder
+                        orders={orders}
+                        updateViewOrder={updateViewOrder}
+                    />
+                );
+            case "new":
+                return (
+                    <ViewNewOrder
+                        orders={orders}
+                        updateViewOrder={updateViewOrder}
+                    />
+                );
+
+            case "pickedup":
+                return (
+                    <ViewPickedUpOrder
+                        orders={orders}
+                        updateViewOrder={updateViewOrder}
+                    />
+                );
+            default:
+                return (
+                    <ViewAllOrders
+                        orders={orders}
+                        updateViewOrder={updateViewOrder}
+                    />
+                );
+        }
+    };
+    return <div>{view()}</div>;
 }
 export default ViewOrdersAdmin;

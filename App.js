@@ -16,7 +16,7 @@ import Photos from "./components/Doctor/Photos";
 import ViewDrugs from "./components/Doctor/ViewDrugs";
 import ViewOrders from "./components/Doctor/ViewOrders";
 import AddDrug from "./components/Admin/AddDrug";
-import ViewSupplier from "./components/Admin/ViewSupplierAdmin";
+import ViewSupplier from "./components/Admin/ViewSupplier";
 import AddSupplier from "./components/Admin/AddSupplier";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -102,15 +102,32 @@ function App() {
                                     element={<ViewOrdersAdmin />}
                                 />
                                 <Route
-                                    path="/admin/view-supplier"
-                                    exact
-                                    element={<ViewSupplier />}
-                                />
-                                <Route
-                                    path="/admin/add-supplier"
-                                    exact
-                                    element={<AddSupplier />}
-                                />
+                                path="/admin/view-orders-new"
+                                exact
+                                element={<ViewOrdersAdmin flag={"new"} />}
+                            />
+
+                            <Route
+                                path="/admin/view-orders-verified"
+                                exact
+                                element={<ViewOrdersAdmin flag={"verified"} />}
+                            />
+
+                            <Route
+                                path="/admin/view-orders-pickedup"
+                                exact
+                                element={<ViewOrdersAdmin flag={"pickedup"} />}
+                            />
+                            <Route
+                                path="/admin/view-supplier"
+                                exact
+                                element={<ViewSupplier />}
+                            />
+                            <Route
+                                path="/admin/add-supplier"
+                                exact
+                                element={<AddSupplier />}
+                            />
                             </Routes>
                         </Col>
                     </Row>

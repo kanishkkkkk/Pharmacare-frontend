@@ -12,3 +12,11 @@ export const cartReducer=(state, action)=>{
             return state;
     }
 };
+export const productReducer = (state, action) => {
+    switch (action.type) {
+        case "CLEAR_FILTERS":
+      return { byStock: false, byFastDelivery: false, byRating: 0 };
+    default:
+      return state;
+  }
+};

@@ -42,7 +42,7 @@ function ViewDrugsAdmin() {
             <h4>Quantity can be changed in the cart</h4>
             <Navbar>
             <div className="search mx-3">
-            <FormControl
+            {/*  <FormControl
               style={{ width: 500 }}
               type="search"
               placeholder="Search a drug"
@@ -53,9 +53,9 @@ function ViewDrugsAdmin() {
                   type: "FILTER_BY_SEARCH",
                   payload: e.target.value,
                 });
-              }}            /> 
+              }}            /> */}
             </div>
-            <div className="mx-2">
+            <div className="mx-3">
                 
                 <Dropdown alignRight>
                     <Dropdown.Toggle variant="alpha">

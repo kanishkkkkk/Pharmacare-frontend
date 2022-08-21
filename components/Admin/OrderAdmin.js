@@ -1,73 +1,169 @@
-import React from "react";
+import React, { useState } from "react";
 import DrugAdmin from "./DrugAdmin";
+
 import {
-    Card,
-    CardBody,
-    CardText,
-    Container,
     Button,
-    Row,
-    Col,
+    Badge,
+    Table,
+    Accordion,
+    AccordionBody,
+    AccordionHeader,
+    AccordionItem,
 } from "reactstrap";
+import axios from "axios";
+import baseUrl from "../../api's/base_url";
 
-// doctorId: "9be2f2d1-8658-4be3-b479-d7b982e0bfcc"
-// drugList: Array(2)
-// 0: {drugId: '028f71d3-a92d-4044-8d55-610607e2f265', drugName: 'd_name_1', drugQuantity: 10, expiryDate: '2024-05-22T00:00:00.000+00:00', price: 220, …}
-// 1: {drugId: '8f5dbbea-ad4a-4768-82c5-5b4fa9954806', drugName: 'd_name_3', drugQuantity: 20, expiryDate: '2025-06-02T00:00:00.000+00:00', price: 150, …}
-// length: 2
-// [[Prototype]]: Array(0)
-// orderId: "62f533b30aa1040390c70e17"
-// pickedUp: true
-// totalPrice: 5200
-// verified: true
-const OrderAdmin=({ order })=> {
-    console.log("single order component");
-    console.log(order);
+function OrderAdmin({ order, updateViewOrder }) {
+    let index = 0;
+    // Accordian state toggle
+    const [open, setOpen] = useState();
+    const toggle = (id) => {
+        if (open === id) {
+            setOpen();
+        } else {
+            setOpen(id);
+        }
+    };
 
+    const verifyOrder = () => {
+        axios.get(baseUrl + "/order/verify/" + order.orderId).then(
+            (response) => {
+                console.log("verified order");
+                updateViewOrder();
+            },
+            (error) => {
+                console.log("unable to verify");
+            }
+        );
+    };
+
+    const pickUpOrder = () => {
+        axios.get(baseUrl + "/order/pickUp/" + order.orderId).then(
+            (response) => {
+                console.log("order placed in pick up");
+                updateViewOrder();
+            },
+            (error) => {
+                console.log("unable to update pick up ");
+            }
+        );
+    };
+
+    const handleVerifyOrder = () => {
+        console.log("handle verify ");
+        verifyOrder();
+    };
+
+    const handlePickUp = () => {
+        console.log("handle pick up ");
+        pickUpOrder();
+    };
     return (
         <div>
-            <Container>
-                <Card>
-                    <CardBody>
-                        <Row>
-                            <Col md={2}>
-                                <CardText>Order id : {order.orderId}</CardText>
-                            </Col>
-                            <Col md={2}>
-                                <CardText>
-                                    Doctor id : {order.doctorId}
-                                </CardText>
-                            </Col>
-                            <Col md={2}>
-                                <CardText>
-                                    Verified :{" "}
-                                    {order.verified ? "true" : "false"} Picked
-                                    up : {order.pickedUp ? "true" : "false"}
-                                </CardText>
-                            </Col>
-                            {/* <Col md={2}>
-                                <CardText></CardText>
-                            </Col> */}
-                            <Col md={5}>
-                                {order.drugList.length > 0
-                                    ? order.drugList.map((d) => (
-                                          <DrugAdmin
-                                              key={d.drugId}
-                                              drug={d}
-                                              flag={true}
-                                          />
-                                      ))
-                                    : "empty drug"}
-                            </Col>
-                            <Col>
-                                <CardText>
-                                    Total Price : {order.totalPrice}
-                                </CardText>
-                            </Col>
-                        </Row>
-                    </CardBody>
-                </Card>
-            </Container>
+            <Accordion open={open} toggle={toggle}>
+                <AccordionItem>
+                    <AccordionHeader targetId="1">
+                        <strong>Order Id : </strong>
+                        {order.orderId}
+                        <span className="mx-2">
+                            <strong> Doctor Id :</strong> {order.doctorId}
+                        </span>
+                        {order.verified ? (
+                            <Badge className="mx-2" color="success" pill>
+                                verified
+                            </Badge>
+                        ) : (
+                            ""
+                        )}
+                        {order.pickedUp ? (
+                            <Badge className="mx-2" color="success" pill>
+                                Picked
+                            </Badge>
+                        ) : (
+                            ""
+                        )}
+                    </AccordionHeader>
+                    <AccordionBody accordionId="1">
+                        {order.drugList.length > 0 ? (
+                            <Table responsive>
+                                <thead>
+                                    <tr>
+                                        <th>S.N.</th>
+                                        <th>Drug Id</th>
+                                        <th>Drug Name</th>
+                                        <th>Expiry Date</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {order.drugList.map((d) => (
+                                        <DrugAdmin
+                                            key={d.drugId}
+                                            drug={d}
+                                            flag={true}
+                                            index={++index}
+                                        />
+                                    ))}
+                                    <tr>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td>
+                                            {!order.verified ? (
+                                                <Button
+                                                    size="sm"
+                                                    className="mx-1"
+                                                    color="primary"
+                                                    onClick={handleVerifyOrder}
+                                                >
+                                                    Verify
+                                                </Button>
+                                            ) : (
+                                                ""
+                                            )}
+
+                                            {order.verified ? (
+                                                order.pickedUp ? (
+                                                    ""
+                                                ) : (
+                                                    <Button
+                                                        size="sm"
+                                                        className="mx-1"
+                                                        color="primary"
+                                                        onClick={handlePickUp}
+                                                    >
+                                                        pick Up
+                                                    </Button>
+                                                )
+                                            ) : (
+                                                <Button
+                                                    size="sm"
+                                                    className="mx-1"
+                                                    color="primary"
+                                                    disabled
+                                                >
+                                                    pick Up
+                                                </Button>
+                                            )}
+                                        </td>
+
+                                        <td>
+                                            <strong>Total Price :</strong>
+                                        </td>
+
+                                        <td> {order.totalPrice}</td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                        ) : (
+                            "empty drug"
+                        )}
+                    </AccordionBody>
+                </AccordionItem>
+            </Accordion>
         </div>
     );
 }

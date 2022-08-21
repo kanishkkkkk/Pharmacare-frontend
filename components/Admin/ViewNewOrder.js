@@ -1,32 +1,32 @@
 import React from "react";
-import { Container, Navbar, NavbarBrand } from "reactstrap";
-import Acordion from "../Admin/Acordion";
-import OrderAdmin from "../Admin/OrderAdmin";
-function ViewAllOrders({ orders, updateViewOrder }) {
+import { Container, NavbarBrand, Navbar } from "reactstrap";
+import OrderAdmin from "./OrderAdmin";
+function ViewNewOrder({ orders, updateViewOrder }) {
+    let newOrder = 0;
     return (
         <div>
             <Navbar className="my-2" color="secondary" dark>
-                <NavbarBrand>All Orders</NavbarBrand>
+                <NavbarBrand>New Orders</NavbarBrand>
             </Navbar>
             <Container>
-                {console.log("view all  orders")}
-                {console.log(orders.length)}
                 {orders.length > 0
                     ? orders.map((o) => {
-                          console.log("view order in map ");
-                          //   console.log(o);
-                          return (
+                          return !o.verified ? (
                               <OrderAdmin
                                   key={o.orderId}
                                   order={o}
                                   updateViewOrder={updateViewOrder}
+                                  d={newOrder++}
                               />
+                          ) : (
+                              ""
                           );
                       })
                     : "No order"}
+                {newOrder === 0 ? <p>There is no new order available</p> : ""}
             </Container>
         </div>
     );
 }
 
-export default ViewAllOrders;
+export default ViewNewOrder;

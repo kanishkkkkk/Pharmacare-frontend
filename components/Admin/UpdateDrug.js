@@ -1,53 +1,69 @@
-import React, { useState } from "react";
-import {
-    Input,
-    Form,
-    FormGroup,
-    Container,
-    Card,
-    Button,
-    Navbar,
-    NavbarBrand,
-} from "reactstrap";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { Input, Form, FormGroup, Container, Card, Button } from "reactstrap";
 import baseUrl from "../../api's/base_url";
-function AddDrug() {
-    const [Drug, setDrug] = useState({});
-    const handleAddDrugForm = (event) => {
-        console.log("handle form drug");
-        console.log(Drug);
-        AddDrugToApi(Drug);
-        event.preventDefault();
-    };
 
-    const AddDrugToApi = (drugDetails) => {
-        console.log("handle form drugDetails");
-        console.log(drugDetails);
-        axios.post(baseUrl + "/drug", drugDetails).then(
+const UpdateDrug = (props) => {
+    const [Drug, setDrug] = useState({});
+    console.log("update drug .js");
+    let id = useParams().id;
+    const getDrugByIdFromApi = () => {
+        axios.get(baseUrl + "/drug/" + id).then(
             (response) => {
-                console.log("drug save successfully");
+                console.log(response.data);
+                setDrug(response.data);
+                console.log("set drug");
+                console.log(Drug);
             },
             (error) => {
-                console.log("drug does not save");
+                console.log("error in drug by id");
+                console.log(error);
             }
         );
     };
 
+    useEffect(() => {
+        document.title = "Update-Drug";
+        getDrugByIdFromApi();
+    }, []);
+
+    const updateDrugOnApi = () => {
+        axios.put(baseUrl + "/drug/" + id, Drug).then(
+            (response) => {
+                console.log(response.data);
+                setDrug(response.data);
+                console.log("set drug");
+                console.log(Drug);
+            },
+            (error) => {
+                console.log("error in drug by id");
+                console.log(error);
+            }
+        );
+    };
+
+    const updateHandler = () => {
+        updateDrugOnApi();
+    };
+
     return (
-        <div className="AddDrug my-2">
-            <Navbar className="my-2" color="secondary" dark>
-                <NavbarBrand>Fill all the Details to add drug</NavbarBrand>
-            </Navbar>
+        <div>
+            <h1>Update Drug</h1>
+            {/* <h1>{Drug.drugName}</h1> */}
             <Container>
                 <Card className="p-4" color="secondary">
-                    <Form onSubmit={handleAddDrugForm}>
+                    <Form>
                         <FormGroup>
+                            <label>Drug Id</label>
+                            <Input defaultValue={Drug.drugId} readOnly></Input>
                             <label>Drug Name</label>
                             <Input
                                 type="text"
                                 placeholder="Enter Drug Name"
                                 id="DName"
                                 name="drugName"
+                                defaultValue={Drug.drugName}
                                 onChange={(e) => {
                                     setDrug({
                                         ...Drug,
@@ -61,6 +77,7 @@ function AddDrug() {
                                 placeholder="Enter Expiry Date"
                                 id="ExpDate"
                                 name="expiryDate"
+                                defaultValue={Drug.expiryDate}
                                 onChange={(e) => {
                                     setDrug({
                                         ...Drug,
@@ -74,6 +91,7 @@ function AddDrug() {
                                 placeholder="Enter Quantity"
                                 id="Qty"
                                 name="drugQuantity"
+                                defaultValue={Drug.drugQuantity}
                                 onChange={(e) => {
                                     setDrug({
                                         ...Drug,
@@ -87,6 +105,7 @@ function AddDrug() {
                                 placeholder="Enter Drug Price"
                                 id="price"
                                 name="price"
+                                defaultValue={Drug.price}
                                 onChange={(e) => {
                                     setDrug({
                                         ...Drug,
@@ -94,15 +113,27 @@ function AddDrug() {
                                     });
                                 }}
                             ></Input>
-                            <Button color="dark" type="submit">
-                                Add
-                            </Button>
+                            <Link to="/admin/view-drugs">
+                                <Button
+                                    color="dark"
+                                    type="submit"
+                                    className="mx-2"
+                                    onClick={updateHandler}
+                                >
+                                    Save Update
+                                </Button>
+                            </Link>
+                            <Link to="/admin/view-drugs">
+                                <Button color="dark" type="submit">
+                                    Cancel
+                                </Button>
+                            </Link>
                         </FormGroup>
                     </Form>
                 </Card>
             </Container>
         </div>
     );
-}
+};
 
-export default AddDrug;
+export default UpdateDrug;
