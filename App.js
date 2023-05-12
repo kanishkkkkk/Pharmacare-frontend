@@ -10,7 +10,7 @@ import AdminMenu from "./components/Admin/AdminMenu";
 import WelcomeAdmin from "./components/Admin/WelcomeAdmin";
 import ViewDrugsAdmin from "./components/Admin/ViewDrugsAdmin";
 import ViewOrdersAdmin from "./components/Admin/ViewOrdersAdmin";
-
+//wsp sum
 import DoctorMenu from "./components/Doctor/DoctorMenu";
 import Photos from "./components/Doctor/Photos";
 import ViewDrugs from "./components/Doctor/ViewDrugs";
